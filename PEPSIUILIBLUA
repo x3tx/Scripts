@@ -5943,7 +5943,21 @@ function library:CreateWindow(options, ...)
 							return Set(nil, default)
 						end
 					}
-					tabFunctions.Flags[flagName], sectionFunctions.Flags[flagName], elements[flagName] = objectdata, objectdata, objectdata
+						tabFunctions.Flags[flagName], sectionFunctions.Flags[flagName], elements[flagName] = objectdata, objectdata, objectdata
+
+						-- Autoload on init
+						if options.Autoload then
+							spawn(function()
+								local autofile = (type(options.Autoload) == "string" and options.Autoload) or selectedOption
+								if autofile and autofile ~= blankstring then
+									local filepath = string.format("%s/%s.txt", common_string, convertfilename(autofile, nil, ""))
+									if isfile and isfile(filepath) then
+										loadstuff(autofile)
+									end
+								end
+							end)
+						end
+
 					return objectdata
 				end
 			else
